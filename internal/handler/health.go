@@ -1,4 +1,4 @@
-package main
+package handler
 
 import (
 	"encoding/json"
@@ -9,7 +9,7 @@ type HealthResponse struct {
 	Message string `json:"message"`
 }
 
-func healthHandler(w http.ResponseWriter, _ *http.Request) {
+func HealthHandler(w http.ResponseWriter, _ *http.Request) {
 	response := HealthResponse{Message: "ok"}
 	jsonBytes, err := json.Marshal(response)
 	if err != nil {

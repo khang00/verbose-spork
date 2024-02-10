@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/khang00/verbose-spork/internal/handler"
 	"net/http"
 )
 
@@ -17,5 +18,5 @@ func main() {
 }
 
 func setupHandler() {
-	http.HandleFunc("/health", healthHandler)
+	http.HandleFunc("/health", handler.HealthHandler)
 }
