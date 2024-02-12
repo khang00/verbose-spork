@@ -10,28 +10,35 @@ import (
 const JWTUserNameKey = "username"
 const JWTUserIDKey = "user_id"
 
-func VerifyJWT(endpointHandler func(writer http.ResponseWriter, request *http.Request)) http.HandlerFunc {
-	return func(writer http.ResponseWriter, request *http.Request) {
-		authHeader := request.Header["Authorization"]
+func VerifyJWT(endpointHandler func(w http.ResponseWriter, r *http.Request)) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		authHeader := r.Header["Authorization"]
 		if len(authHeader) == 0 {
-			writer.WriteHeader(http.StatusUnauthorized)
-			_, _ = writer.Write([]byte("Unauthorized token is empty"))
+			w.WriteHeader(http.StatusUnauthorized)
+			_, _ = w.Write([]byte("Unauthorized token is empty"))
 			return
 		}
 
 		token, err := jwt.ValidateToken(strings.Split(authHeader[0], " ")[1])
 		if err != nil {
-			writer.WriteHeader(http.StatusUnauthorized)
-			_, _ = writer.Write([]byte("Unauthorized error parsing the JWT"))
+			w.WriteHeader(http.StatusUnauthorized)
+			_, _ = w.Write([]byte("Unauthorized error parsing the JWT"))
 			return
 		}
 
 		claims, _ := jwt.GetClaims(token)
-		username := claims[JWTUserNameKey].(string)
 
-		ctx := context.WithValue(request.Context(), "username", username)
-		endpointHandler(writer, request.WithContext(ctx))
+		ctx := injectClaimsToCtx(r.Context(), claims)
+		endpointHandler(w, r.WithContext(ctx))
 	}
+}
+
+func injectClaimsToCtx(ctx context.Context, claims map[string]interface{}) context.Context {
+	for k, v := range claims {
+		ctx = context.WithValue(ctx, k, v)
+	}
+
+	return ctx
 }
 
 func GenerateJWTToken(username string, userID string) (string, error) {
