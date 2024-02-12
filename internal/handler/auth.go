@@ -29,7 +29,8 @@ type SignupRequest struct {
 }
 
 type SignupResponse struct {
-	UserID int `json:"user_id"`
+	UserID int    `json:"user_id"`
+	Token  string `json:"token"`
 }
 
 func (s *AuthHandler) Signup(w http.ResponseWriter, r *http.Request) {
@@ -66,7 +67,15 @@ func (s *AuthHandler) signup(req *SignupRequest) (*SignupResponse, error) {
 		return nil, err
 	}
 
-	return &SignupResponse{UserID: int(user.ID)}, nil
+	token, err := GenerateJWTToken(req.Username)
+	if err != nil {
+		return nil, err
+	}
+
+	return &SignupResponse{
+		UserID: int(user.ID),
+		Token:  token,
+	}, nil
 }
 
 type SigninRequest struct {
@@ -75,7 +84,8 @@ type SigninRequest struct {
 }
 
 type SigninResponse struct {
-	UserID int `json:"user_id"`
+	UserID int    `json:"user_id"`
+	Token  string `json:"token"`
 }
 
 func (s *AuthHandler) Signin(w http.ResponseWriter, r *http.Request) {
@@ -112,7 +122,13 @@ func (s *AuthHandler) signin(req *SigninRequest) (*SigninResponse, error) {
 		return nil, fmt.Errorf("wrong password")
 	}
 
+	token, err := GenerateJWTToken(req.Username)
+	if err != nil {
+		return nil, err
+	}
+
 	return &SigninResponse{
 		UserID: int(user.ID),
+		Token:  token,
 	}, nil
 }
