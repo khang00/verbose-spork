@@ -7,10 +7,13 @@ import (
 
 var defaultSecretKey = []byte("secret")
 
-func CreateToken(key string, val string) (string, error) {
+func CreateToken(payload map[string]string) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
-	claims[key] = val
+
+	for k, v := range payload {
+		claims[k] = v
+	}
 
 	return token.SignedString(defaultSecretKey)
 }

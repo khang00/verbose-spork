@@ -22,7 +22,7 @@ func TestParseJWT(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := CreateToken("username", tt.args.username)
+			got, err := CreateToken(map[string]string{"username": tt.args.username})
 			if err != nil {
 				t.Errorf("CreateToken() error = %v", err)
 				return
