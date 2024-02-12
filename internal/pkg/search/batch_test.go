@@ -40,7 +40,7 @@ func TestRateLimitQuerier_Search(t *testing.T) {
 			}
 
 			for _, result := range results {
-				if checkResult(result) {
+				if !isValid(result) {
 					t.Errorf("Search() result is empty: %v", result)
 				}
 			}
