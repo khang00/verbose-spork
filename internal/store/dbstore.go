@@ -73,3 +73,13 @@ func (s *PostgresStore) CreateKeywords(keywords []*model.Keyword) ([]*model.Keyw
 
 	return keywords, nil
 }
+
+func (s *PostgresStore) GetKeywordByID(ID uint) (*model.Keyword, error) {
+	keyword := &model.Keyword{}
+	err := s.conn.First(keyword, ID).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return keyword, nil
+}
