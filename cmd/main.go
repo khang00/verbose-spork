@@ -34,4 +34,5 @@ func setupHandler(authhandler *auth.AuthHandler, keywordHandler *keyword.Keyword
 	http.HandleFunc("/api/user/signin", authhandler.Signin)
 
 	http.HandleFunc("/api/keyword/upload", handler.VerifyJWT(keywordHandler.UploadKeywords))
+	http.HandleFunc("/api/keyword", handler.VerifyJWT(keywordHandler.GetKeywordsDetail))
 }

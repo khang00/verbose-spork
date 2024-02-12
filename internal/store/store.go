@@ -7,4 +7,5 @@ type Store interface {
 	FindUserByUsername(username string) (*model.User, error)
 
 	CreateKeywords(keywords []*model.Keyword) ([]*model.Keyword, error)
+	GetKeywordByID(ID uint) (*model.Keyword, error)
 }

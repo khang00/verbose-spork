@@ -1,9 +1,12 @@
 package keyword
 
 import (
+	"github.com/gorilla/schema"
 	"github.com/khang00/verbose-spork/internal/handler"
 	"github.com/khang00/verbose-spork/internal/pkg/search"
 )
+
+var decoder = schema.NewDecoder()
 
 type KeywordHandler struct {
 	querier      search.BatchQuerier

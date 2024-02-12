@@ -22,14 +22,6 @@ type Result struct {
 	Keyword string `json:"keyword"`
 }
 
-type ResultDetails struct {
-	Result
-	ResultStats   int    `json:"result_stats"`
-	NumberOfLinks int    `json:"number_of_links"`
-	NumberOfAds   int    `json:"number_of_ads"`
-	HTML          string `json:"html"`
-}
-
 func (s *KeywordHandler) UploadKeywords(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Invalid method", http.StatusBadRequest)
