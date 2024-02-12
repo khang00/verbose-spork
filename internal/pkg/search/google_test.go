@@ -19,15 +19,22 @@ func TestGoogleSearchQuerier_Search(t *testing.T) {
 		{
 			name: "search for Aquafina",
 			args: args{keyword: "Airpods"},
-			want: "search result is not empty",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, _ := r.Search(tt.args.keyword)
-			if got.ResultStats == 0 || got.NumberOfLinks == 0 || got.HTMLPage == "" {
-				t.Errorf("Search() got = %v, want %s", got, tt.want)
+			got, err := r.Search(tt.args.keyword)
+			if err != nil {
+				t.Errorf("Search() got error: %s", err)
+			}
+
+			if checkResult(got) {
+				t.Errorf("Search() result is empty: %v", got)
 			}
 		})
 	}
+}
+
+func checkResult(result *Result) bool {
+	return result.ResultStats == 0 || result.NumberOfLinks == 0 || result.HTMLPage == ""
 }
