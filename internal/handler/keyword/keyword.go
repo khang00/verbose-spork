@@ -10,8 +10,9 @@ type KeywordHandler struct {
 	keywordStore handler.KeywordStore
 }
 
-func NewKeywordHandler() *KeywordHandler {
+func NewKeywordHandler(keywordStore handler.KeywordStore) *KeywordHandler {
 	return &KeywordHandler{
-		querier: search.NewRateLimitQuerier(search.DefaultReqPerSec, search.DefaultBurst),
+		querier:      search.NewRateLimitQuerier(search.DefaultReqPerSec, search.DefaultBurst),
+		keywordStore: keywordStore,
 	}
 }

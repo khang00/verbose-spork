@@ -3,6 +3,7 @@ package keyword
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/khang00/verbose-spork/internal/handler/auth"
 	"github.com/khang00/verbose-spork/internal/model"
 	"net/http"
@@ -45,6 +46,7 @@ func (s *KeywordHandler) UploadKeywords(w http.ResponseWriter, r *http.Request) 
 	resp, err := s.uploadKeywords(r.Context(), req)
 	if err != nil {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		fmt.Printf("%s", err)
 		return
 	}
 

@@ -16,7 +16,7 @@ func main() {
 	}
 
 	authHandler := auth.NewAuthHandler(db)
-	keywordHandler := keyword.NewKeywordHandler()
+	keywordHandler := keyword.NewKeywordHandler(db)
 
 	setupHandler(authHandler, keywordHandler)
 
