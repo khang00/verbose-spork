@@ -15,12 +15,14 @@ func VerifyJWT(endpointHandler func(writer http.ResponseWriter, request *http.Re
 		if len(authHeader) == 0 {
 			writer.WriteHeader(http.StatusUnauthorized)
 			_, _ = writer.Write([]byte("Unauthorized token is empty"))
+			return
 		}
 
-		token, err := jwt.ValidateToken(strings.Split(authHeader[0], " ")[len(authHeader)-1])
+		token, err := jwt.ValidateToken(strings.Split(authHeader[0], " ")[1])
 		if err != nil {
 			writer.WriteHeader(http.StatusUnauthorized)
 			_, _ = writer.Write([]byte("Unauthorized error parsing the JWT"))
+			return
 		}
 
 		claims, _ := jwt.GetClaims(token)
