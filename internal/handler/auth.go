@@ -6,6 +6,7 @@ import (
 	"github.com/khang00/verbose-spork/internal/model"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
+	"strconv"
 )
 
 type UserStore interface {
@@ -67,7 +68,7 @@ func (s *AuthHandler) signup(req *SignupRequest) (*SignupResponse, error) {
 		return nil, err
 	}
 
-	token, err := GenerateJWTToken(req.Username)
+	token, err := GenerateJWTToken(user.Username, strconv.Itoa(int(user.ID)))
 	if err != nil {
 		return nil, err
 	}
@@ -122,7 +123,7 @@ func (s *AuthHandler) signin(req *SigninRequest) (*SigninResponse, error) {
 		return nil, fmt.Errorf("wrong password")
 	}
 
-	token, err := GenerateJWTToken(req.Username)
+	token, err := GenerateJWTToken(user.Username, strconv.Itoa(int(user.ID)))
 	if err != nil {
 		return nil, err
 	}

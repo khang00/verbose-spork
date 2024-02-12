@@ -8,6 +8,7 @@ import (
 )
 
 const JWTUserNameKey = "username"
+const JWTUserIDKey = "user_id"
 
 func VerifyJWT(endpointHandler func(writer http.ResponseWriter, request *http.Request)) http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
@@ -33,6 +34,9 @@ func VerifyJWT(endpointHandler func(writer http.ResponseWriter, request *http.Re
 	}
 }
 
-func GenerateJWTToken(username string) (string, error) {
-	return jwt.CreateToken(JWTUserNameKey, username)
+func GenerateJWTToken(username string, userID string) (string, error) {
+	return jwt.CreateToken(map[string]string{
+		JWTUserNameKey: username,
+		JWTUserIDKey:   userID,
+	})
 }
