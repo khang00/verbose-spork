@@ -2,10 +2,13 @@ module github.com/khang00/verbose-spork
 
 go 1.21.6
 
-require github.com/gocolly/colly v1.2.0
+require (
+	github.com/PuerkitoBio/goquery v1.8.1
+	github.com/gocolly/colly v1.2.0
+	golang.org/x/time v0.5.0
+)
 
 require (
-	github.com/PuerkitoBio/goquery v1.8.1 // indirect
 	github.com/andybalholm/cascadia v1.3.1 // indirect
 	github.com/antchfx/htmlquery v1.3.0 // indirect
 	github.com/antchfx/xmlquery v1.3.18 // indirect
