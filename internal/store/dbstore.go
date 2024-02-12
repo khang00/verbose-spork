@@ -33,7 +33,12 @@ func NewPostgresStore(config *PostgresConfig) (Store, error) {
 	if err != nil {
 		return nil, err
 	}
-	db.AutoMigrate(&model.User{})
+
+	err = db.AutoMigrate(&model.User{}, &model.Keyword{})
+	if err != nil {
+		return nil, err
+	}
+
 	return &PostgresStore{
 		conn: db,
 	}, nil
@@ -58,4 +63,13 @@ func (s *PostgresStore) FindUserByUsername(username string) (*model.User, error)
 	}
 
 	return user, nil
+}
+
+func (s *PostgresStore) CreateKeywords(keywords []*model.Keyword) ([]*model.Keyword, error) {
+	err := s.conn.Create(&keywords).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return keywords, nil
 }
