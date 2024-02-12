@@ -28,13 +28,13 @@ func TestGoogleSearchQuerier_Search(t *testing.T) {
 				t.Errorf("Search() got error: %s", err)
 			}
 
-			if checkResult(got) {
+			if !isValid(got) {
 				t.Errorf("Search() result is empty: %v", got)
 			}
 		})
 	}
 }
 
-func checkResult(result *Result) bool {
-	return result.ResultStats == 0 || result.NumberOfLinks == 0 || result.HTMLPage == ""
+func isValid(result *Result) bool {
+	return result.Keyword != "" && result.ResultStats > 0 && result.NumberOfLinks > 0 && result.HTMLPage != ""
 }

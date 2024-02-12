@@ -79,6 +79,7 @@ func (r *GoogleQuerier) Search(keyword string) (*Result, error) {
 			err = errParse
 		}
 
+		result.Keyword = keyword
 		result.ResultStats = stats
 		result.NumberOfLinks = len(links)
 		result.NumberOfAds = adsNum
