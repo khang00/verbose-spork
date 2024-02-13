@@ -1,5 +1,9 @@
 # verbose-spork
 
+
+https://github.com/khang00/verbose-spork/assets/40449174/f0208363-2086-45a8-9f5d-e662aa839675
+
+
 ## Project structure
 the front end is in `fe` folder. I chose to make this sub folder for the front-end, because there is not enough time to split front-end to another repo.
 
@@ -28,8 +32,7 @@ the backend is in this folder, and follows the structure outlined in [golang pro
     1. `POST /api/user/signin` user sign in
     2. `POST /api/user/signup` user sign up
 2. `POST /api/keyword/upload` upload a list of keywords for searching
-3. `GET /api/keyword` get list of keywords
-4. `GET /api/keyword/result/?id=[id]` get the search result for this keywords
+3. `GET /api/keyword?id=[id]` get the search result for this keywords
 
 ### Modules
 1. Upload file
