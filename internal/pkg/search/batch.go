@@ -49,6 +49,7 @@ func (r *RateLimitQuerier) Search(keywords []string) ([]*Result, error) {
 		err = r.limiter.Wait(ctx)
 
 		wg.Add(1)
+		keyword := keyword
 		go func() {
 			defer wg.Done()
 
