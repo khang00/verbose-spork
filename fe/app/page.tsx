@@ -2,6 +2,7 @@
 import Auth from "@/app/components/Auth";
 import React, {useState} from "react";
 import {SigninResp, SignupResp} from "@/app/fetch";
+import Search from "@/app/components/Search";
 
 const Page = () => {
     const [user, setUser] = useState({
@@ -28,10 +29,10 @@ const Page = () => {
     }
 
     return (
-        <main className="flex justify-center items-center w-full h-full">
+        <main>
             {user.username == '' ?
                 (<Auth onSignin={onSignin} onSignup={onSignup}></Auth>) :
-                (<div></div>)}
+                (<Search></Search>)}
         </main>
     );
 }

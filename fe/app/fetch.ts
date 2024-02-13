@@ -3,8 +3,12 @@ import axios from "axios";
 const host = 'http://localhost:8080'
 const axiosInstance = axios.create({
     baseURL: host,
-    timeout: 1000,
+    timeout: 60000,
 });
+
+const GetToken = (): string | null => {
+    return sessionStorage.getItem('token')
+}
 
 interface SigninReq {
     username: string,
@@ -20,11 +24,7 @@ interface SigninResp {
 const Signin = async (req: SigninReq): Promise<SigninResp> => {
     const resp = await axiosInstance.post("/api/user/signin", req)
     const signinResp = parseSigninResp(resp.data)
-
-    axios.interceptors.request.use(function (config) {
-        config.headers.Authorization = `Bearer ${signinResp.token}`
-        return config;
-    });
+    sessionStorage.setItem('token', signinResp.token)
 
     return signinResp
 }
@@ -51,11 +51,7 @@ interface SignupResp {
 const Signup = async (req: SignupReq): Promise<SignupResp> => {
     const resp = await axiosInstance.post("/api/user/signup", req)
     const signupResp = parseSignupResp(resp.data)
-
-    axios.interceptors.request.use(function (config) {
-        config.headers.Authorization = `Bearer ${signupResp.token}`
-        return config;
-    });
+    sessionStorage.setItem('token', signupResp.token)
 
     return signupResp
 }
@@ -68,5 +64,65 @@ const parseSignupResp = (data: any): SignupResp => {
     }
 }
 
-export type {SigninResp, SigninReq, SignupReq, SignupResp}
-export {Signin, Signup}
+type Results = Result[]
+
+interface Result {
+    id: number,
+    keyword: string,
+}
+
+const Search = async (keywords: string[]): Promise<Results> => {
+    const token = GetToken()
+    const resp = await axiosInstance.post("/api/keyword/upload", {
+        keywords: keywords
+    }, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+
+    return parseKeywordsResponse(resp.data)
+}
+
+const parseKeywordsResponse = (data: any): Results => {
+    return data.results.map((obj: any) => {
+        return {
+            id: obj.id,
+            keyword: obj.keyword,
+        }
+    })
+}
+
+interface ResultDetails {
+    id: number,
+    keyword: string,
+    resultStats: number,
+    numberOfLinks: number,
+    numberOfAds: number,
+    html: string,
+}
+
+const GetResultDetails = async (result: Result): Promise<ResultDetails> => {
+    const token = GetToken()
+    const resp = await axiosInstance.get(`/api/keyword?id=${result.id}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+
+    return parseResultDetailsResponse(resp.data)
+}
+
+const parseResultDetailsResponse = (data: any): ResultDetails => {
+    return {
+        id: data.id,
+        keyword: data.keyword,
+        resultStats: data.result_stats,
+        numberOfLinks: data.number_of_links,
+        numberOfAds: data.number_of_ads,
+        html: data.html,
+    }
+}
+
+export type {SigninResp, SigninReq, SignupReq, SignupResp, Results, Result}
+export {Signin, Signup, Search, GetResultDetails}

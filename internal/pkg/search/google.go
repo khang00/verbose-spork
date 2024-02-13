@@ -37,6 +37,7 @@ func NewGoogleSearchQuerier() *GoogleQuerier {
 
 	cookies := getCookiesFromString(defaultCookies)
 	collector := colly.NewCollector()
+	collector.AllowURLRevisit = true
 	collector.SetCookies(defaultSearchURLTemplate, cookies)
 	collector.UserAgent = defaultUserAgent
 
