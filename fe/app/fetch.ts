@@ -37,5 +37,36 @@ const parseSigninResp = (data: any): SigninResp => {
     }
 }
 
-export type {SigninResp, SigninReq}
-export {Signin}
+interface SignupReq {
+    username: string,
+    password: string,
+}
+
+interface SignupResp {
+    userID: number,
+    username: string,
+    token: string,
+}
+
+const Signup = async (req: SignupReq): Promise<SignupResp> => {
+    const resp = await axiosInstance.post("/api/user/signup", req)
+    const signupResp = parseSignupResp(resp.data)
+
+    axios.interceptors.request.use(function (config) {
+        config.headers.Authorization = `Bearer ${signupResp.token}`
+        return config;
+    });
+
+    return signupResp
+}
+
+const parseSignupResp = (data: any): SignupResp => {
+    return {
+        userID: data.userID,
+        username: data.username,
+        token: data.token
+    }
+}
+
+export type {SigninResp, SigninReq, SignupReq, SignupResp}
+export {Signin, Signup}

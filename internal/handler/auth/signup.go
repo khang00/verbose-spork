@@ -14,8 +14,9 @@ type SignupRequest struct {
 }
 
 type SignupResponse struct {
-	UserID int    `json:"user_id"`
-	Token  string `json:"token"`
+	UserID   int    `json:"user_id"`
+	Username string `json:"username"`
+	Token    string `json:"token"`
 }
 
 func (s *AuthHandler) Signup(w http.ResponseWriter, r *http.Request) {
@@ -58,7 +59,8 @@ func (s *AuthHandler) signup(req *SignupRequest) (*SignupResponse, error) {
 	}
 
 	return &SignupResponse{
-		UserID: int(user.ID),
-		Token:  token,
+		UserID:   int(user.ID),
+		Username: user.Username,
+		Token:    token,
 	}, nil
 }
