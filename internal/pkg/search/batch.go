@@ -15,7 +15,7 @@ const (
 )
 
 const (
-	DefaultReqPerSec = 5
+	DefaultReqPerSec = 4
 	DefaultBurst     = 10
 )
 
@@ -55,6 +55,7 @@ func (r *RateLimitQuerier) Search(keywords []string) ([]*Result, error) {
 			result, err2 := r.querier.Search(keyword)
 			if err2 != nil {
 				err = err2
+				return
 			}
 
 			results = append(results, result)
