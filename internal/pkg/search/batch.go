@@ -3,6 +3,7 @@ package search
 import (
 	"context"
 	"golang.org/x/time/rate"
+	"sync"
 )
 
 type ProcessStatus = string
@@ -14,7 +15,7 @@ const (
 )
 
 const (
-	DefaultReqPerSec = 10
+	DefaultReqPerSec = 5
 	DefaultBurst     = 10
 )
 
@@ -37,24 +38,32 @@ func NewRateLimitQuerier(reqPerSec int, burst int) *RateLimitQuerier {
 func (r *RateLimitQuerier) Search(keywords []string) ([]*Result, error) {
 	ctx := context.TODO()
 	results := make([]*Result, 0)
-
 	r.status = Processing
 	defer func() {
 		r.status = Done
 	}()
 
+	var wg sync.WaitGroup
+	var err error
 	for _, keyword := range keywords {
-		err := r.limiter.Wait(ctx)
-		if err != nil {
-			return nil, err
-		}
+		err = r.limiter.Wait(ctx)
 
-		result, err := r.querier.Search(keyword)
-		if err != nil {
-			return nil, err
-		}
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
 
-		results = append(results, result)
+			result, err2 := r.querier.Search(keyword)
+			if err2 != nil {
+				err = err2
+			}
+
+			results = append(results, result)
+		}()
+	}
+
+	wg.Wait()
+	if err != nil {
+		return nil, err
 	}
 
 	return results, nil
