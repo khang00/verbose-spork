@@ -3,6 +3,10 @@
 
 https://github.com/khang00/verbose-spork/assets/40449174/f0208363-2086-45a8-9f5d-e662aa839675
 
+## Run
+Front end can be run by first `cd` to the `fe` folder then run `npm dev`
+
+Back end can be run by `go build cmd/main.go && ./main`
 
 ## Project structure
 the front end is in `fe` folder. I chose to make this sub folder for the front-end, because there is not enough time to split front-end to another repo.
