@@ -93,5 +93,36 @@ const parseKeywordsResponse = (data: any): Results => {
     })
 }
 
+interface ResultDetails {
+    id: number,
+    keyword: string,
+    resultStats: number,
+    numberOfLinks: number,
+    numberOfAds: number,
+    html: string,
+}
+
+const GetResultDetails = async (result: Result): Promise<ResultDetails> => {
+    const token = GetToken()
+    const resp = await axiosInstance.get(`/api/keyword?id=${result.id}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+
+    return parseResultDetailsResponse(resp.data)
+}
+
+const parseResultDetailsResponse = (data: any): ResultDetails => {
+    return {
+        id: data.id,
+        keyword: data.keyword,
+        resultStats: data.result_stats,
+        numberOfLinks: data.number_of_links,
+        numberOfAds: data.number_of_ads,
+        html: data.html,
+    }
+}
+
 export type {SigninResp, SigninReq, SignupReq, SignupResp, Results, Result}
-export {Signin, Signup, Search}
+export {Signin, Signup, Search, GetResultDetails}

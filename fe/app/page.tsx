@@ -29,7 +29,7 @@ const Page = () => {
     }
 
     return (
-        <main className="flex justify-center items-center w-full h-full">
+        <main>
             {user.username == '' ?
                 (<Auth onSignin={onSignin} onSignup={onSignup}></Auth>) :
                 (<Search></Search>)}
