@@ -30,9 +30,9 @@ func main() {
 
 func setupHandler(authhandler *auth.AuthHandler, keywordHandler *keyword.KeywordHandler) {
 	http.HandleFunc("/health", handler.HealthHandler)
-	http.HandleFunc("/api/user/signup", authhandler.Signup)
-	http.HandleFunc("/api/user/signin", authhandler.Signin)
+	http.HandleFunc("/api/user/signup", handler.AllowCORS(authhandler.Signup))
+	http.HandleFunc("/api/user/signin", handler.AllowCORS(authhandler.Signin))
 
-	http.HandleFunc("/api/keyword/upload", handler.VerifyJWT(keywordHandler.UploadKeywords))
-	http.HandleFunc("/api/keyword", handler.VerifyJWT(keywordHandler.GetKeywordsDetail))
+	http.HandleFunc("/api/keyword/upload", handler.AllowCORS(handler.VerifyJWT(keywordHandler.UploadKeywords)))
+	http.HandleFunc("/api/keyword", handler.AllowCORS(handler.VerifyJWT(keywordHandler.GetKeywordsDetail)))
 }
