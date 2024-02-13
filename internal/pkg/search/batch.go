@@ -15,7 +15,7 @@ const (
 )
 
 const (
-	DefaultReqPerSec = 5
+	DefaultReqPerSec = 4
 	DefaultBurst     = 10
 )
 
