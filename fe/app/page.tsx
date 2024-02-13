@@ -1,7 +1,7 @@
 'use client';
 import Auth from "@/app/components/Auth";
 import React, {useState} from "react";
-import {SigninResp} from "@/app/fetch";
+import {SigninResp, SignupResp} from "@/app/fetch";
 
 const Page = () => {
     const [user, setUser] = useState({
@@ -19,10 +19,18 @@ const Page = () => {
         })
     }
 
+    const onSignup = (signup: SignupResp) => {
+        setUser({
+            userID: signup.userID,
+            username: signup.username,
+            token: signup.token,
+        })
+    }
+
     return (
-        <main className="w-full h-full">
+        <main className="flex justify-center items-center w-full h-full">
             {user.username == '' ?
-                (<Auth onSignin={onSignin}></Auth>) :
+                (<Auth onSignin={onSignin} onSignup={onSignup}></Auth>) :
                 (<div></div>)}
         </main>
     );
