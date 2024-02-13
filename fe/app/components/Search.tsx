@@ -1,8 +1,9 @@
 import FileInput from "@/app/components/FileInput";
-import {useState} from "react";
+import React, {useState} from "react";
 import {GetResultDetails, Search} from "@/app/fetch";
 import KeywordView from "@/app/components/KeywordView";
 import DetailView from "@/app/components/DetailView";
+import Input from "@/app/components/Input";
 
 interface Result {
     id: number,
@@ -20,6 +21,10 @@ interface ResultDetails {
 
 export default function () {
     const [keywords, setKeywords] = useState<string[]>([]);
+
+    const [searchKeyword, setSearchKeyword] = useState('');
+    const [filteredResults, setFilteredResults] = useState<Result[]>([]);
+
     const [results, setResults] = useState<Result[]>([]);
     const [details, setDetails] = useState<ResultDetails | undefined>();
 
@@ -39,6 +44,8 @@ export default function () {
             setIsLoading(true)
             const results = await Search(keywords)
             setResults(results)
+
+            setFilteredResults(results)
             setIsLoading(false)
         }
     }
@@ -46,6 +53,13 @@ export default function () {
     const onClickResult = async (result: Result) => {
         const details = await GetResultDetails(result)
         setDetails(details)
+    }
+
+    const onSearchKeyword = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchKeyword(e.target.value)
+        setFilteredResults(results.filter(result => {
+            return result.keyword.startsWith(e.target.value)
+        }))
     }
 
     return (
@@ -58,11 +72,23 @@ export default function () {
                 ></FileInput>
                 {error && <div className="text-red-500 mt-2">{error}</div>}
             </div>
+            <div className="flex items-center py-6 min-w-80">
+                {keywords.length > 0 && (
+                    <div className="w-full">
+                        <Input
+                            type="text"
+                            label="search for keywords"
+                            value={searchKeyword}
+                            onChange={onSearchKeyword}
+                        ></Input>
+                    </div>
+                )}
+            </div>
 
             <div className="flex w-full flex-nowrap py-6">
                 {keywords.length > 0 && (
                     <div className="flex-1 min-w-90">
-                        <KeywordView results={results} onClickResult={onClickResult}></KeywordView>
+                        <KeywordView results={filteredResults} onClickResult={onClickResult}></KeywordView>
                     </div>
                 )}
 
